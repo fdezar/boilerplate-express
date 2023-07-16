@@ -3,6 +3,22 @@ let app = express();
 
 require('dotenv').config();
 
+app.use((req, res, next) => {
+    console.log(req.method + " " + req.path + " - " + req.ip);
+    next();
+});
+
+let getCurrentTimeString = () => {
+    return new Date().toString();
+}
+
+app.get("/now", (req, res, next) => {
+    req.time = getCurrentTimeString();
+    next();
+}, (req, res) => {
+    res.json({ time: req.time })
+})
+
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/views/index.html");
 });
@@ -28,10 +44,17 @@ app.get("/json", (req, res) => {
     res.json(jsonResponse);
 });
 
+app.get("/:word/echo", (req, res) => {
+    res.json({ echo: req.params.word });
+});
+
 console.log("Hello World");
 
+app.get("/name", (req, res) => {
+    res.json({ name: req.query.first + " " + req.query.last });
+});
 
-
+app.post()
 
 
 
